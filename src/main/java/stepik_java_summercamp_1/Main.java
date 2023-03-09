@@ -11,48 +11,35 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-//        Numbers numbers = new Numbers();
-//        int r = numbers.sum(5);
-//        System.out.println(r);
+//        Иванов Иван +38056
+//        Столяров Сергей +38057
+//        Стоянов Илья +38055
+//        Сергей Дурдачник +38033
 
         Scanner scanner = new Scanner(System.in);
-        TreeMap<Character, Integer> map = new TreeMap<>();
-        String s = scanner.nextLine();
-        s = s.toLowerCase();
+        TreeMap <String, TreeSet<String>> map = new TreeMap<>();
 
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) >= 'a' && s.charAt(i) <= 'z'){
-                if (map.containsKey(s.charAt(i))){
-                    map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
-                }else {
-                    map.put(s.charAt(i), 1);
-                }
+        for (int i = 0; i < 4; i++) {
+            String s = scanner.nextLine();
+            String [] arrString = s.split(" ");
+            String name = arrString[0] + " " + arrString[1];
+            String number = arrString[2];
+            if (map.containsKey(name)){
+                map.get(name).add(number);
+            }else {
+                TreeSet<String> set = new TreeSet<>();
+                set.add(number);
+                map.put(name, set);
             }
         }
-        for (Character ch: map.keySet()) {
-            System.out.println(ch + ":" + map.get(ch));
+        for (String name :
+                map.keySet()) {
+            System.out.print(name + " : ");
+            for (String number: map.get(name)){
+                System.out.print(number + " ");
+            }
+            System.out.println();
         }
-
-//        Scanner scanner = new Scanner(System.in);
-//        int n = scanner.nextInt();
-//
-//        BigInteger f = new BigInteger("0");
-//        BigInteger f1 = new BigInteger("1");
-//        BigInteger f2 = new BigInteger("1");
-//
-//        if (n == 1 || n == 2){
-//            System.out.println(1);
-//        }else {
-//            for (int i = 3; i <= n; i++) {
-//                f = f1.add(f2);
-//                f2 = f1;
-//                f1 = f;
-//
-//            }
-//            System.out.println(f);
-//        }
-
-
 
     }
 
