@@ -16,30 +16,70 @@ public class Main {
 //        Стоянов Илья +38055
 //        Сергей Дурдачник +38033
 
-        Scanner scanner = new Scanner(System.in);
-        TreeMap <String, TreeSet<String>> map = new TreeMap<>();
+//        Scanner scanner = new Scanner(System.in);
+//        TreeMap <String, TreeSet<String>> map = new TreeMap<>();
+//
+//        for (int i = 0; i < 4; i++) {
+//            String s = scanner.nextLine();
+//            String [] arrString = s.split(" ");
+//            String name = arrString[0] + " " + arrString[1];
+//            String number = arrString[2];
+//            if (map.containsKey(name)){
+//                map.get(name).add(number);
+//            }else {
+//                TreeSet<String> set = new TreeSet<>();
+//                set.add(number);
+//                map.put(name, set);
+//            }
+//        }
+//        for (String name :
+//                map.keySet()) {
+//            System.out.print(name + " : ");
+//            for (String number: map.get(name)){
+//                System.out.print(number + " ");
+//            }
+//            System.out.println();
+//        }
 
-        for (int i = 0; i < 4; i++) {
-            String s = scanner.nextLine();
-            String [] arrString = s.split(" ");
-            String name = arrString[0] + " " + arrString[1];
-            String number = arrString[2];
-            if (map.containsKey(name)){
-                map.get(name).add(number);
+        Scanner scanner = new Scanner(System.in);
+        TreeMap<String, TreeSet<String>> map = new TreeMap<>();
+        String [] arrNewFriends = {};
+
+        while (true){
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty()){
+                break;
             }else {
-                TreeSet<String> set = new TreeSet<>();
-                set.add(number);
-                map.put(name, set);
+                arrNewFriends = line.split(" ");
+                String firstFriend = arrNewFriends[0];
+                String secondFriend = arrNewFriends[1];
+                if (map.containsKey(firstFriend)){
+                    map.get(firstFriend).add(secondFriend);
+                }else{
+                    TreeSet<String> set = new TreeSet<>();
+                    set.add(secondFriend);
+                    map.put(firstFriend, set);
+                }
+                //А теперь друзей меняем местами
+                if (map.containsKey(secondFriend)){
+                    map.get(secondFriend).add(firstFriend);
+                }else{
+                    TreeSet<String> set = new TreeSet<>();
+                    set.add(firstFriend);
+                    map.put(secondFriend, set);
+                }
+
+
             }
         }
-        for (String name :
-                map.keySet()) {
-            System.out.print(name + " : ");
-            for (String number: map.get(name)){
-                System.out.print(number + " ");
+        for (String name : map.keySet()) {
+            System.out.print(name + " Дружит с :");
+            for (String frend: map.get(name)) {
+                System.out.print(" " + frend);
             }
             System.out.println();
         }
+
 
     }
 
