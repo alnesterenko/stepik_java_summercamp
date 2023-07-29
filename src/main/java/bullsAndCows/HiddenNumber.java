@@ -14,10 +14,12 @@ public class HiddenNumber implements Constants{
     public List<Integer> createHidenList() {
         List<Integer> tempList = new ArrayList<>(COUNTOFDIGITE);
         Random random = new Random();
-        for (int i = 0; i < COUNTOFDIGITE; i++) {
+        int countOfDigites = 0;
+        while (countOfDigites < COUNTOFDIGITE) {
             int tempDigite = random.nextInt(10);
             if (!tempList.contains(tempDigite)) {
                 tempList.add(tempDigite);
+                countOfDigites++;
             }
         }
         return tempList;
@@ -56,5 +58,9 @@ public class HiddenNumber implements Constants{
     public void winCongratulation() {
         System.err.println(" Вы победили!!!");
         System.err.println(" Загаданное число: " + listToDigite(getHidenList()));
+    }
+
+    public void showHidenNumber() {
+        System.out.println(listToDigite(getHidenList()));
     }
 }
