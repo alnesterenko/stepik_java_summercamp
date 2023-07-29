@@ -1,10 +1,9 @@
 package stepik_java_summercamp_1;
 
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.StringJoiner;
+import java.util.*;
 
-public class Numbers {
+
+public class Trainings {
 
     //number of divisors
 
@@ -96,7 +95,7 @@ public class Numbers {
     }
 
     /*Метод ищет значение в массиве и возвращает индекс или -1 если ничего не найдено*/
-    public static int findValueInArray(int[] arr,int value) {
+    public static int findValueInArray(int[] arr, int value) {
         int result = -1;
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == value) {
@@ -107,25 +106,29 @@ public class Numbers {
         return result;
     }
 
-    public static int[][] rows(int count) {
-        int[][] triangle = new int[count][];
-        int counter = 0;
-        for(int i = 0; i < count; i++){
-            triangle[i] = new int[i + 1];
-            for(int j = 0; j < i + 1; j++){
-                triangle[i][j] = ++counter;
+
+    public static Map<Integer, User> addNewElementWithoutCheck(List<User> list) {
+        Map<Integer, User> rsl = new HashMap<>();
+        for (User oneUser : list) {
+            rsl.put(oneUser.id(), oneUser);
+        }
+        return rsl;
+    }
+
+    public static Map<Integer, User> addNewElementWithCheck(List<User> list) {
+        Map<Integer, User> rsl = new HashMap<>();
+        for (User oneUser : list) {
+            if (!rsl.containsKey(oneUser.id())) {
+                rsl.put(oneUser.id(), oneUser);
             }
         }
-        return triangle;
+        return rsl;
+    }
+
+    public record User(int id, String name) {
     }
 
     public static void main(String[] args) {
-        int[][] triangle = rows(7);
-        for(int i = 0; i < triangle.length; i++){
-            for(int j = 0; j < i + 1; j++){
-                System.out.print(triangle[i][j] + " ");
-            }
-            System.out.println();
-        }
+
     }
 }
