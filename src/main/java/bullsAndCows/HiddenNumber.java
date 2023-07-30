@@ -55,8 +55,8 @@ public class HiddenNumber implements Constants{
         System.out.println(" Быков: " + getBulls(digiteList) + ", коров: " + getCows(digiteList));
     }
 
-    public void winCongratulation() {
-        System.err.println(" Вы победили!!!");
+    public void winCongratulation(int counter) {
+        System.err.println(" Вы победили!!! С " + counter + " попытки.");
         System.err.println(" Загаданное число: " + listToDigite(getHidenList()));
     }
 

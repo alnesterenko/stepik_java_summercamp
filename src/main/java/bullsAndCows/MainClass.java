@@ -19,6 +19,6 @@ public class MainClass implements Constants{
                 stopTheGame = true;
             }
         } while (!stopTheGame);
-        hiddenNumber.winCongratulation();
+        hiddenNumber.winCongratulation(counter);
     }
 }
