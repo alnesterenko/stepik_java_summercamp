@@ -115,14 +115,12 @@ public class Trainings {
         return rsl;
     }
 
-    public static Map<Integer, User> addNewElementWithCheck(List<User> list) {
-        Map<Integer, User> rsl = new HashMap<>();
-        for (User oneUser : list) {
-            if (!rsl.containsKey(oneUser.id())) {
-                rsl.put(oneUser.id(), oneUser);
-            }
+    public static Map<Integer, String> collectData(
+            Map<Integer, String> name, Map<Integer, String> surname) {
+        for (Integer oneKey : name.keySet()) {
+            name.computeIfPresent(oneKey, (key, value) -> value + surname.get(oneKey));
         }
-        return rsl;
+        return name;
     }
 
     public record User(int id, String name) {

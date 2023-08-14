@@ -1,32 +1,75 @@
 package transmorfers;
 
-import java.util.*;
+interface PrinterInterface {
 
-class GetOrDefault {
+    void print();
 
-    private Map<Integer, List<String>> store = new HashMap<>();
+}
 
-    public void addValue(int index, List<String> list) {
-        if (getValue(index).size() == 0) {
-            store.put(index, list);
-        }
+class Printer implements PrinterInterface {
+
+    private String value;
+
+    public Printer(String value) {
+        this.value = value;
     }
 
-    public List<String> getValue(int index) {
-        return store.getOrDefault(index, new ArrayList<String>());
-    }
-
-    public static void main(String[] args) {
-        List<String> list = List.of("one", "two", "three");
-        List<String> second = List.of("four", "five", "six");
-        List<String> third = List.of("seven", "eight", "nine");
-        GetOrDefault get = new GetOrDefault();
-        get.addValue(1, list);
-        get.addValue(2, second);
-        get.addValue(1, third);
-        List<String> values = get.getValue(1);
-        for (String oneValue : values) {
-            System.out.println(oneValue);
-        }
+    @Override
+    public void print() {
+        System.out.print(value);
     }
 }
+
+class QuotesDecorator implements PrinterInterface {
+    PrinterInterface component;
+
+    public QuotesDecorator(PrinterInterface component) {
+        this.component = component;
+    }
+
+    @Override
+    public void print() {
+        System.out.print("\"");
+        component.print();
+        System.out.print("\"");
+    }
+}
+
+class LeftBracketDecorator implements PrinterInterface {
+    PrinterInterface component;
+
+    public LeftBracketDecorator(PrinterInterface component) {
+        this.component = component;
+    }
+
+    @Override
+    public void print() {
+        System.out.print("[");
+        component.print();
+    }
+}
+
+class RightBracketDecorator implements PrinterInterface {
+    PrinterInterface component;
+
+    public RightBracketDecorator(PrinterInterface component) {
+        this.component = component;
+    }
+
+    @Override
+    public void print() {
+        component.print();
+        System.out.print("]");
+    }
+}
+
+class DecoratorApp {
+    public static void main(String[] args) {
+        PrinterInterface printer = new RightBracketDecorator(new LeftBracketDecorator(new QuotesDecorator(new Printer("Яба-даба-ду!"))));
+        printer.print();
+    }
+}
+
+
+
+
