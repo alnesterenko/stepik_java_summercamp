@@ -1,75 +1,61 @@
 package transmorfers;
 
-interface PrinterInterface {
+import java.util.ArrayList;
+import java.util.List;
 
-    void print();
+class Switcher {
+    private List<ElectricityConsumer> listeners = new ArrayList<>();
 
+    public void addElectricityListener(ElectricityConsumer listener) {
+        listeners.add(listener);
+    }
+
+    public void removeElectricityListener(ElectricityConsumer listener) {
+        listeners.remove(listener);
+    }
+
+    public void switchOn() {
+        System.out.println("Выключатель включён!");
+        for (ElectricityConsumer oneListener : listeners) {
+            oneListener.electricityOn();
+        }
+    }
 }
 
-class Printer implements PrinterInterface {
-
-    private String value;
-
-    public Printer(String value) {
-        this.value = value;
+class Lamp implements ElectricityConsumer {
+    public void lightsOn () {
+        System.out.println("Лампа зажглась!");
     }
 
     @Override
-    public void print() {
-        System.out.print(value);
+    public void electricityOn() {
+        lightsOn();
     }
 }
 
-class QuotesDecorator implements PrinterInterface {
-    PrinterInterface component;
-
-    public QuotesDecorator(PrinterInterface component) {
-        this.component = component;
+class Radio implements ElectricityConsumer {
+    public void playMusic () {
+        System.out.println("Радио играет музыку!");
     }
 
     @Override
-    public void print() {
-        System.out.print("\"");
-        component.print();
-        System.out.print("\"");
+    public void electricityOn() {
+        playMusic();
     }
 }
 
-class LeftBracketDecorator implements PrinterInterface {
-    PrinterInterface component;
-
-    public LeftBracketDecorator(PrinterInterface component) {
-        this.component = component;
-    }
-
-    @Override
-    public void print() {
-        System.out.print("[");
-        component.print();
-    }
+interface ElectricityConsumer {
+    void electricityOn();
 }
 
-class RightBracketDecorator implements PrinterInterface {
-    PrinterInterface component;
-
-    public RightBracketDecorator(PrinterInterface component) {
-        this.component = component;
-    }
-
-    @Override
-    public void print() {
-        component.print();
-        System.out.print("]");
-    }
-}
-
-class DecoratorApp {
+class Main {
     public static void main(String[] args) {
-        PrinterInterface printer = new RightBracketDecorator(new LeftBracketDecorator(new QuotesDecorator(new Printer("Яба-даба-ду!"))));
-        printer.print();
+        Switcher sw = new Switcher();
+        Lamp lamp = new Lamp();
+        Radio radio = new Radio();
+        // Подписка на событие (event subscribe)
+        sw.addElectricityListener(lamp);
+        sw.addElectricityListener(radio);
+        sw.switchOn();
     }
 }
-
-
-
-
