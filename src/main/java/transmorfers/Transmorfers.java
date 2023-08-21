@@ -23,7 +23,7 @@ class Switcher {
 }
 
 class Lamp implements ElectricityConsumer {
-    public void lightsOn () {
+    public void lightsOn() {
         System.out.println("Лампа зажглась!");
     }
 
@@ -34,7 +34,7 @@ class Lamp implements ElectricityConsumer {
 }
 
 class Radio implements ElectricityConsumer {
-    public void playMusic () {
+    public void playMusic() {
         System.out.println("Радио играет музыку!");
     }
 
@@ -53,9 +53,23 @@ class Main {
         Switcher sw = new Switcher();
         Lamp lamp = new Lamp();
         Radio radio = new Radio();
+
         // Подписка на событие (event subscribe)
         sw.addElectricityListener(lamp);
         sw.addElectricityListener(radio);
+
+        // Добавляем в список потребителей электричества анонимный(одноразовый) класс
+        sw.addElectricityListener(
+                new ElectricityConsumer() {
+
+                    @Override
+                    public void electricityOn() {
+                        // Выводим одноразовое сообщение
+                        System.out.println("Пожар!");
+                    }
+                }
+        );
+
         sw.switchOn();
     }
 }
