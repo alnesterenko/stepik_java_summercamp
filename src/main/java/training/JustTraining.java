@@ -17,7 +17,6 @@ public class JustTraining {
         if (matcher.find()) {
             level = text.substring(matcher.start(), matcher.end());
         }
-
         int positionOfFirstSpace = text.indexOf(' ');
         char tempSymbol = ' ';
         for (int i = positionOfFirstSpace + 1; i < text.length(); i++) {
