@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 
 public class JustTraining {
 
-    public record Line(String level, String threads, String text) { }
+    public record Line(String level, String threads, String text) {
+    }
 
     public Line parse(String text) {
         int openingBrackets = 0, closingBrackets = 0, positiEndThreads = 0;
@@ -37,22 +38,83 @@ public class JustTraining {
                 text.substring(positiEndThreads + 2));
     }
 
-    public static void main(String[] args) {
-        JustTraining training = new JustTraining();
-        System.out.println(training.parse("WARNING [threads [zqfz [wbye [zfq]]] - 1] wqqa [e] zqw"));
-
-        /*try (BufferedReader input = new BufferedReader(new FileReader("data/input.txt"))) {
-            input.lines().forEach(System.out::println);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try (BufferedWriter output = new BufferedWriter(new FileWriter("data/output.txt"))) {
-            String str1 = "я у мамы дурачок";
-            String str2 = "ты у мамы дурачок";
-            String unionString = String.format("%s%n%s", str1, str2);
-            output.write(unionString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+    public static void main(String[] args) throws IOException {
+        /*JustTraining training = new JustTraining();
+        System.out.println(training.parse("WARNING [threads [zqfz [wbye [zfq]]] - 1] wqqa [e] zqw"));*/
+        FindInLineDemo.main(args);
     }
+
+    class AvgFile {
+        public static void main(String[] args) throws IOException {
+            int count = 0;
+            double sum = 0.0;
+
+            // Записать выходные данные в файл.
+            FileWriter fout = new FileWriter("text.txt");
+            fout.write("2 3.4 5 6 7.4 9.1 10.5 done");
+            fout.close();
+
+            FileReader fin = new FileReader("test.txt");
+            Scanner src = new Scanner(fin);
+
+            // Читать и суммировать числа.
+            while (src.hasNext()) {
+                if (src.hasNextDouble()) {
+                    sum += src.nextDouble();
+                    count++;
+                } else {
+                    String str = src.next();
+                    if ("done".equals(str)) {
+                        break;
+                    } else {
+                        System.out.println("Ошибка формата файла.");
+                        return;
+                    }
+                }
+            }
+            src.close();
+            System.out.println("Среднее значение равно " + sum / count);
+        }
+    }
+
+    class ScanMixed {
+        public static void main(String[] args) throws IOException {
+            // Запись входных данных в файл.
+            FileWriter fout = new FileWriter("stepik_java_summercamp_1_1/src/data/test.txt");
+            fout.write("Testing;Scanner;10;12.2\none;true;two;false");
+            fout.close();
+
+            FileReader fin = new FileReader("stepik_java_summercamp_1_1/src/data/test.txt");
+            Scanner src = new Scanner(fin);
+
+            // Читать до конца.
+            while (src.hasNextLine()) {
+                String oneLine = src.nextLine();
+                Scanner oneWord = new Scanner(oneLine);
+                oneWord.useDelimiter(";");
+                while (oneWord.hasNext()) {
+                    System.out.println(oneWord.next());
+                }
+                oneWord.close();
+                System.out.println("NextLine: ");
+            }
+            src.close();
+        }
+    }
+
+    class FindInLineDemo {
+        public static void main(String[] args) {
+            String instr = "Name: Tom Age: 28 ID: 77";
+            Scanner conin = new Scanner(instr);
+            // Найти и отобразить возраст.
+            conin.findInLine("Age:"); // Найти Age
+            if (conin.hasNext()) {
+                System.out.println(conin.next());
+            } else {
+                System.out.println("Ошибка!");
+            }
+            conin.close();
+        }
+    }
+
 }
