@@ -1,44 +1,77 @@
 package training;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 public class SlidingWindows {
 
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        int windowMax;
-        int numLength = nums.length;
-        int lengthOfResultArr = numLength - k + 1; // вычисление размера результирующего массива
-        int[] resultArr = new int[lengthOfResultArr];
-        if (numLength == 0 || k == 0) {
-            resultArr = new int[]{nums[0]};
-        } else if (numLength == 1) {
-            resultArr = nums;
-        } else {
-            for (int i = 0; i < numLength - k + 1; i++) {
-                windowMax = nums[i];
-                for (int j = i; j < k + i; j++) {
-                   windowMax = Math.max(windowMax, nums[j]);
+    BiFunction<Integer, Integer, Integer> decrease = (oldValue, newValue) -> oldValue - newValue;
+    BiFunction<Integer, Integer, Integer> increase = (oldValue, newValue) -> oldValue + newValue;
+
+    public int characterReplacement(String s, int k) {
+        int maxLengthOfSubstring = 0;
+        int leftCursor = 0;
+        int rightCursor = 0;
+        int countOfWrongCharacter = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        int sLength = s.length();
+        while (rightCursor < sLength) {
+            char tempChar = s.charAt(rightCursor);
+            if (map.isEmpty()) {
+                map.put(tempChar, 1);
+            } else {
+                changeCountInMap(map, tempChar, increase);
+                if (tempChar != getMaxUsedChar(map)) {
+                    countOfWrongCharacter++;
                 }
-                resultArr[i] = windowMax;
+            }
+            if (countOfWrongCharacter > k) {
+                changeCountInMap(map, s.charAt(leftCursor), decrease);
+                leftCursor++;
+                countOfWrongCharacter--;
+            }
+            maxLengthOfSubstring = Math.max(maxLengthOfSubstring, (map.get(getMaxUsedChar(map)) + countOfWrongCharacter));
+            rightCursor++;
+        }
+        return maxLengthOfSubstring;
+    }
+
+    public void changeCountInMap(Map<Character, Integer> map, Character character, BiFunction biFunction) {
+        map.merge(character, 1, biFunction);
+        if (map.get(character) <= 0) {
+            map.remove(character);
+        }
+    }
+
+    public Character getMaxUsedChar(Map<Character, Integer> map) {
+        int maxUsed = -1;
+        Character tempChar = null;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            int tempEntryValue = entry.getValue();
+            if (tempEntryValue > maxUsed) {
+                maxUsed = tempEntryValue;
+                tempChar = entry.getKey();
             }
         }
-        return resultArr;
+        return tempChar;
     }
 
     public static void main(String[] args) {
-        int[] nums = {1, 8, 9, 9, 5, 6, 7, 8, 9}; // старый ответ 24
-        int k = 3;
+        String s = "ABAB";
+        int k = 2;
         SlidingWindows slidingWindows = new SlidingWindows();
-        int[] resultArr = slidingWindows.maxSlidingWindow(nums, k);
-        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
-        for (int oneDigit : resultArr) {
-            stringJoiner.add(String.valueOf(oneDigit));
-        }
-        System.out.println(stringJoiner.toString());
+        int result = slidingWindows.characterReplacement(s, k); // ответ 4
+        System.out.println(result);
+
+        s = "AABABBA";
+        k = 1;
+        result = slidingWindows.characterReplacement(s, k); // ответ 4
+        System.out.println(result);
+
+        s = "AABABCBA";
+        k = 2;
+        result = slidingWindows.characterReplacement(s, k); // ответ 5
+        System.out.println(result);
     }
 }
