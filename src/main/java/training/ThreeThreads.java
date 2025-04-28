@@ -1,10 +1,15 @@
 package training;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ThreeThreads {
-    static class Worker {
+
+    private static List<Worker> workers = new ArrayList<>();
+    static final Object LOCK = new Object();
+    static boolean haveWinner = false;
+
+    static class Worker extends Thread {
         private final String name;
         private final int delay;
 
@@ -13,30 +18,47 @@ public class ThreeThreads {
             this.delay = delay;
         }
 
-        public CompletableFuture<String> run() {
-            return CompletableFuture.supplyAsync(() -> {
-                System.out.printf("Start %s\r\n", name);
-                try {
-                    Thread.sleep(delay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        @Override
+        public void run() {
+            System.out.printf("Start %s\r\n", name);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            synchronized (LOCK) {
+                if (!haveWinner) {
+                    haveWinner = true;
+                    LOCK.notifyAll();
+                    System.out.printf("Finished %s\r\n", name);
                 }
-                System.out.printf("Finished %s\r\n", name);
-                return name;
-            });
+            }
         }
     }
 
+    private static synchronized void stopAll() {
+        workers.forEach((thread) -> {
+            if (thread.isAlive()) {
+                thread.interrupt();
+            }
+        });
+    }
+
     public static void main(String[] args) {
-        CompletableFuture<Object> onlyOne = CompletableFuture.anyOf(
-                new Worker("worker 1", 100).run(),
-                new Worker("worker 2", 2000).run(),
-                new Worker("worker 3", 1000).run()
-        );
-        try {
-            System.out.println("Winner is " + onlyOne.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        workers = List.of(
+                new ThreeThreads.Worker("worker 1", 100),
+                new ThreeThreads.Worker("worker 2", 100),
+                new ThreeThreads.Worker("worker 3", 100));
+        workers.forEach(Thread::start);
+        synchronized (LOCK) {
+            while (!haveWinner) {
+                try {
+                    LOCK.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
+        stopAll();
     }
 }
